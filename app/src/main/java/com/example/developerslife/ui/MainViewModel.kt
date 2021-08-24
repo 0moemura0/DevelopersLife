@@ -1,7 +1,6 @@
 package com.example.developerslife.ui
 
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel

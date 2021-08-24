@@ -1,12 +1,9 @@
 package com.example.developerslife.ui
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.core.net.toUri
@@ -17,14 +14,16 @@ import com.example.developerslife.R
 import com.example.developerslife.network.ApiRepository
 import com.example.developerslife.network.RetrofitClient
 
-
 private const val ARG_PARAM_TYPE = "type"
 
-class GifFragment : Fragment() {
+class GifFragment : Fragment(R.layout.fragment_gif) {
 
     private var imageUri: Uri? = null
     private var type: GifTypes? = null
     private val viewModel: MainViewModel = MainViewModel(ApiRepository(RetrofitClient.getClient()))
+
+    private var count = 1
+    val DOWNLOAD_COUNT = 5
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,22 +32,23 @@ class GifFragment : Fragment() {
         }
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_gif, container, false)
-        val image: ImageView = root.findViewById(R.id.image)
-        val tyda: ImageButton = root.findViewById(R.id.tyda)
-        val obratno: ImageButton = root.findViewById(R.id.obratno)
-        tyda.setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val image: ImageView = view.findViewById(R.id.image)
+        val left: ImageButton = view.findViewById(R.id.right)
+        val right: ImageButton = view.findViewById(R.id.left)
+
+
+        left.setOnClickListener {
             viewModel.setData(type ?: GifTypes.BEST, 2)
         }
-        obratno.setOnClickListener {
+        right.setOnClickListener {
             viewModel.setData(type ?: GifTypes.BEST, 0)
         }
-        viewModel.setData(type ?: GifTypes.BEST, 1)
+
+
+        viewModel.setData(type ?: GifTypes.BEST, count % DOWNLOAD_COUNT)
         viewModel.gif.observe(viewLifecycleOwner, {
             it.handle {
                 success { it1 ->
@@ -57,19 +57,18 @@ class GifFragment : Fragment() {
                         Glide.with(requireContext()).asGif()
                             .load(imageUri)
                             .into(image);
+                        count++
                     }
                 }
                 loading {
-                    Log.d("NAG", "loading")
+                    Log.d("TAG", "loading")
                 }
                 error { code, s, _ ->
-                    Log.d("NAG", "error")
-                    Log.d("NAG", code.toString())
-                    Log.d("NAG", s)
+                    Log.d("TAG", "error")
                 }
             }
         })
-        return root
+
     }
 
     companion object {

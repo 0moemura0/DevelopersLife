@@ -40,21 +40,21 @@ class ApiRepository(private val apiService: API) {
         }
     }
 
-    fun getGif(request: GetGifRequest): LiveData<Resource<GIF>>{
+    fun getGif(request: GetGifRequest): LiveData<Resource<GIF>> {
         val resource = MutableLiveData<Resource<GIF>>(Resource.Loading())
         apiService.getGIF(request.type, request.page).enqueue {
-
             success {
-                resource.value =it.body()?.get(0)?.let { it1 -> Resource.Success(it1) } ?: Resource.Error(
-                    it.code(),
-                    it.message())
+                resource.value = it.body()?.result?.get(0)?.let { it1 -> Resource.Success(it1) }
+                    ?: Resource.Error(
+                        it.code(),
+                        it.message()
+                    )
             }
             error { response, _ ->
                 resource.value =
                     Resource.Error(response?.code(), response?.message().toString())
             }
         }
-
         return resource
 
     }

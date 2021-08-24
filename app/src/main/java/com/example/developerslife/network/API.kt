@@ -6,5 +6,5 @@ import retrofit2.http.Path
 
 interface API {
     @GET("/{type}/{page}?json=true")
-    fun getGIF(@Path("type" )type: String, @Path("page" ) page:Int): Call<List<GIF>>
+    fun getGIF(@Path("type" )type: String, @Path("page" ) page:Int): Call<GifResult>
 }

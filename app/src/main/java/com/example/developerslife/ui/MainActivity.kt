@@ -16,10 +16,13 @@ class MainActivity : FragmentActivity() {
     private lateinit var adapter: NumberAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
-    private val tabNames: Array<String> = arrayOf(
-        getString(R.string.last),
-        getString(R.string.best),
-        getString(R.string.hot))
+    private val tabNames: Array<String> by lazy {
+        arrayOf(
+            getString(R.string.last),
+            getString(R.string.best),
+            getString(R.string.hot)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
