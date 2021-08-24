@@ -1,4 +1,4 @@
 # DevelopersLifeApp
 
-![preview](/preview.gif)
+![preview](/x_preview.gif)
 * Preview
